@@ -13,7 +13,7 @@ public class OrdineDTO {
     private String cliente;
     private LocalDate data;
     private Integer importo;
-    private Integer impiegato;
+    private Impiegato impiegato;
 
     public Integer getId(){
         return id;
@@ -39,10 +39,10 @@ public class OrdineDTO {
     public void setImporto(Integer importo){
         this.importo = importo;
     }
-    public Integer getImpiegato(){
+    public Impiegato getImpiegato(){
         return impiegato;
     }
-    public void setImpiegato(Integer impiegato){
+    public void setImpiegato(Impiegato impiegato){
         this.impiegato = impiegato;
     }
 

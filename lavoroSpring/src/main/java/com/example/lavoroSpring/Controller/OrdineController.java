@@ -1,12 +1,10 @@
 package com.example.lavoroSpring.Controller;
 
+import com.example.lavoroSpring.DTO.OrdineDTO;
 import com.example.lavoroSpring.DTO.OrdineDTOstring;
 import com.example.lavoroSpring.Service.OrdineService;
 import jakarta.persistence.Entity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,4 +25,21 @@ public class OrdineController {
     public List<OrdineDTOstring> getAllOrdine() {
         return ordineService.getAllOrdini();
     }
+
+    @PostMapping("/saveOrdine")
+    public OrdineDTOstring saveOrdine(@RequestBody OrdineDTO ordineDTO) {
+        return ordineService.saveOrdine(ordineDTO);
+    }
+
+    @PutMapping("/updateOrdine/{id}")
+    public OrdineDTOstring updateOrdine(@PathVariable("id") Integer id, @RequestBody OrdineDTO ordineDTO) {
+        return ordineService.updateOrdine(id, ordineDTO);
+    }
+
+    @DeleteMapping("/deleteOrdine/{id}")
+    public OrdineDTOstring deleteOrdine(@PathVariable("id") Integer id) {
+        return ordineService.deleteOrdine(id);
+    }
+
+
 }

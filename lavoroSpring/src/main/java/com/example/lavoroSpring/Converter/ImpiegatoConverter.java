@@ -11,7 +11,7 @@ public class ImpiegatoConverter {
         impiegatoDTOstring.setId(impiegato.getId());
         impiegatoDTOstring.setNome(impiegato.getNome());
         impiegatoDTOstring.setCognome(impiegato.getCognome());
-        impiegatoDTOstring.setLivello(impiegato.getLivello());
+        if(impiegato.getLivello()!=null) impiegatoDTOstring.setLivello(impiegato.getLivello());
         if (impiegato.getOrdini() != null) {
             for (Ordine o : impiegato.getOrdini()) {
                 impiegatoDTOstring.getOrdini().add(o.toString());
