@@ -49,7 +49,7 @@ public class Impiegato {
     }
 
     public String toString(){
-        return id+"\t "+nome+"\t "+cognome+"\tlivello: "+livello;
+        return id+" "+nome+" "+cognome+" livello: "+livello;
     }
 
     public boolean equals(Object o){

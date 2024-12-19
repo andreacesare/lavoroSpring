@@ -64,6 +64,14 @@ public class ImpiegatoService {
         return ImpiegatoConverter.impiegatoDTOstring(impiegato);
         }
 
-
-
+    public List<ImpiegatoDTOstring> impiegatiXCliente(String id){
+        List<Ordine> ordini=ordineRepository.findAll();
+        List<ImpiegatoDTOstring> list=ordini.stream()
+                .filter(i->i.getCliente().equalsIgnoreCase(id))
+                .map(Ordine::getImpiegato)
+                .map(ImpiegatoConverter::impiegatoDTOstring).distinct()
+                .toList();
+       list.stream().forEach(i->i.setOrdini(null));
+        return list;
+    }
 }

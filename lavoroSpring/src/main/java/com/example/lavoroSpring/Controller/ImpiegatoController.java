@@ -40,4 +40,8 @@ public class ImpiegatoController {
         return impiegatoService.updateImpiegato(id, impiegatoDTO);
     }
 
+    @GetMapping("/cliente")
+    public List<ImpiegatoDTOstring> impiegatixCliente(@RequestParam("id") String id) {
+        return impiegatoService.impiegatiXCliente(id);
+    }
 }

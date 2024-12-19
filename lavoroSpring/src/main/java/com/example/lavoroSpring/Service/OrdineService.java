@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class OrdineService {
@@ -66,6 +68,68 @@ public class OrdineService {
         impiegatoRepository.save(ordine.getImpiegato());
         ordineRepository.delete(ordine);
         return ordineDTOstring;
+    }
+
+    public List<OrdineDTOstring> ordinixImpiegato(Integer id) {
+        List<Ordine> ordini=ordineRepository.findAll();
+        List<OrdineDTOstring> ordiniString=ordini.stream()
+                .filter(o->o.getImpiegato().getId().equals(id))
+                .map(OrdineConverter::toDTOString)
+                .distinct()
+                .toList();
+        return ordiniString;
+    }
+
+    public List<OrdineDTOstring> ordiniFebbraio(){
+        List<Ordine> ordini=ordineRepository.findAll();
+        List<OrdineDTOstring> lista=ordini.stream()
+                .filter(o->o.getData()!=null&&o.getData().getMonthValue()==2)
+                .map(OrdineConverter::toDTOString).toList();
+        return lista;
+    }
+
+    public List<Map.Entry<String,Double>> ClientiSpesa(){
+        List<Ordine> ordini=ordineRepository.findAll();
+        Map<String,Double> clienti=ordini.stream().filter(o->o.getCliente()!=null).collect(Collectors.groupingBy(Ordine::getCliente,Collectors.summingDouble(Ordine::getImporto)));
+        return clienti.entrySet().stream().sorted((e1,e2)->e2.getValue().compareTo(e1.getValue())).collect(Collectors.toList());
+    }
+
+    public List<Map.Entry<Integer,Long>> livelliOrdini(){
+        List<Ordine> ordini=ordineRepository.findAll();
+
+        Map<Integer,Long> lista=ordini.stream().filter(o->o.getId()!=0).collect(Collectors.groupingBy(o->o.getImpiegato().getLivello(),Collectors.counting()));
+
+        List<Impiegato> impiegati = impiegatoRepository.findAll();
+
+        Map<Integer, Long> lista2 = impiegati.stream()
+                .map(Impiegato::getLivello)
+                .distinct()
+                .collect(Collectors.toMap(
+                        livello -> livello,
+                        livello -> lista.getOrDefault(livello, 0L)
+                ));
+        return lista2.entrySet().stream().collect(Collectors.toList());
+    }
+
+    public List<Map.Entry<Impiegato,Double>> impiegatiSoldiTot(){
+        List<Ordine> ordini=ordineRepository.findAll();
+        Map<Impiegato,Double> lista=ordini.stream().collect(Collectors.groupingBy(Ordine::getImpiegato,Collectors.summingDouble(Ordine::getImporto)));
+        return lista.entrySet().stream().collect(Collectors.toList());
+    }
+    public List<Map.Entry<Integer,Double>> livelliSoldiTot(){
+        List<Ordine> ordini=ordineRepository.findAll();
+        Map<Integer,Double> lista=ordini.stream().collect(Collectors.groupingBy(o->o.getImpiegato().getLivello(),Collectors.summingDouble(Ordine::getImporto)));
+        return lista.entrySet().stream().collect(Collectors.toList());
+    }
+
+    public List<Map.Entry<Impiegato,Long>> impiegatiOrdini(){
+        List<Ordine> ordini=ordineRepository.findAll();
+        Map<Impiegato,Long> lista=ordini.stream().filter(o->o.getId()!=0).collect(Collectors.groupingBy(Ordine::getImpiegato,Collectors.counting()));
+        List<Impiegato> impiegati=impiegatoRepository.findAll();
+        Map<Impiegato,Long> lista2=impiegati.stream()
+                .collect(Collectors.toMap(impiegato->impiegato,impiegato->lista.getOrDefault(impiegato,0L)));
+        return lista2.entrySet().stream().collect(Collectors.toList());
+
     }
 
 
